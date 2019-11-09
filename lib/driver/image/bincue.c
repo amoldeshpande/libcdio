@@ -1270,6 +1270,9 @@ cdio_open_cue (const char *psz_cue_name)
 
   memset( &_funcs, 0, sizeof(_funcs) );
 
+#if _MSC_VER
+#pragma warning(disable:4133) //incompatible int to enum cast
+#endif
   _funcs.eject_media           = _eject_media_image;
   _funcs.free                  = _free_image;
   _funcs.get_arg               = _get_arg_image;
@@ -1306,6 +1309,9 @@ cdio_open_cue (const char *psz_cue_name)
   _funcs.set_arg               = _set_arg_image;
   _funcs.set_speed             = cdio_generic_unimplemented_set_speed;
   _funcs.set_blocksize         = cdio_generic_unimplemented_set_blocksize;
+#if _MSC_VER
+#pragma warning(default:4133) //incompatible int to enum cast
+#endif
 
   if (NULL == psz_cue_name) return NULL;
 

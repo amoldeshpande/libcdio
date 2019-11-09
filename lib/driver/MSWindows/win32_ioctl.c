@@ -35,21 +35,10 @@
 #  define _NTSRB_ /* Bad things happen if srb.h gets included */
 # endif
 # include <windows.h>
-# ifdef HAVE_DDK_SCSI_H
-#  include <ddk/scsi.h>
-# endif
-# ifdef HAVE_NTDDCDRM_H
-#  include <ntddcdrm.h>
-# endif
-# ifdef HAVE_DDK_NTDDCDRM_H
-#  include <ddk/ntddcdrm.h>
-# endif
-# ifdef HAVE_NTDDSCSI_H
-#  include <ntddscsi.h>
-# endif
-# ifdef HAVE_DDK_NTDDSCSI_H
-#  include <ddk/ntddscsi.h>
-# endif
+#define _NTSCSI_USER_MODE_
+#include <scsi.h>
+#include <ntddcdrm.h>
+#include <ntddscsi.h>
 #endif
 
 #if defined (_WIN32)
@@ -74,6 +63,8 @@
                   __FILE__, __LINE__, __PRETTY_FUNCTION__, i_err); \
 }
 #else
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+
 #define windows_error(loglevel,i_err) {                                 \
   char error_msg[80];                                                   \
   long int count;                                                       \
@@ -363,18 +354,11 @@ close_tray_win32ioctl (const char *psz_win32_drive)
   DWORD dw_bytes_returned;
   DWORD dw_access_flags;
 
-  OSVERSIONINFO ov;
   HANDLE h_device_handle;
   BOOL   b_success;
 
-  memset(&ov,0,sizeof(OSVERSIONINFO));
-  ov.dwOSVersionInfoSize=sizeof(OSVERSIONINFO);
-  GetVersionEx(&ov);
 
-  if((ov.dwPlatformId==VER_PLATFORM_WIN32_NT) &&
-     (ov.dwMajorVersion>4))
-    dw_access_flags = GENERIC_READ|GENERIC_WRITE;  /* add gen write on W2k/XP */
-  else dw_access_flags = GENERIC_READ;
+dw_access_flags = GENERIC_READ|GENERIC_WRITE;  /* add gen write on W2k/XP */
 
   h_device_handle = CreateFile( psz_win32_drive,
                                 dw_access_flags,
@@ -676,8 +660,8 @@ dvd_discmode_win32ioctl (_img_private_t *p_env)
   dvd.physical.type = CDIO_DVD_STRUCT_PHYSICAL;
   dvd.physical.layer_num = 0;
 
-  rc = mmc_get_dvd_struct_physical_private (p_env, &run_mmc_cmd_win32ioctl,
-                                            &dvd);
+#pragma warning(suppress:4133)
+  rc = mmc_get_dvd_struct_physical_private (p_env, &run_mmc_cmd_win32ioctl, &dvd);
 
   if (DRIVER_OP_SUCCESS == rc) {
     switch(dvd.physical.layer[0].book_type) {
@@ -904,59 +888,17 @@ read_mode1_sector_win32ioctl (_img_private_t *env, void *data,
 bool
 init_win32ioctl (_img_private_t *env)
 {
-#ifdef WIN32
-  OSVERSIONINFO ov;
-#endif
-
-#ifdef _XBOX
-  ANSI_STRING filename;
-  OBJECT_ATTRIBUTES attributes;
-  IO_STATUS_BLOCK status;
-  HANDLE hDevice;
-  NTSTATUS error;
-#else
   unsigned int len=strlen(env->gen.source_name);
   char psz_win32_drive[7];
   DWORD dw_access_flags;
-#endif
 
   cdio_debug("using winNT/2K/XP ioctl layer");
 
-#ifdef WIN32
-  memset(&ov,0,sizeof(OSVERSIONINFO));
-  ov.dwOSVersionInfoSize=sizeof(OSVERSIONINFO);
-  GetVersionEx(&ov);
 
-  if((ov.dwPlatformId==VER_PLATFORM_WIN32_NT) &&
-     (ov.dwMajorVersion>4))
-    dw_access_flags = GENERIC_READ|GENERIC_WRITE;  /* add gen write on W2k/XP */
-  else dw_access_flags = GENERIC_READ;
-#endif
+dw_access_flags = GENERIC_READ|GENERIC_WRITE;  /* add gen write on W2k/XP */
 
   if (cdio_is_device_win32(env->gen.source_name))
   {
-#ifdef _XBOX
-    //  Use XBOX cdrom, no matter what drive letter is given.
-    RtlInitAnsiString(&filename,"\\Device\\Cdrom0");
-    InitializeObjectAttributes(&attributes, &filename, OBJ_CASE_INSENSITIVE,
-                               NULL);
-    error = NtCreateFile( &hDevice,
-                          GENERIC_READ |SYNCHRONIZE | FILE_READ_ATTRIBUTES,
-                          &attributes,
-                          &status,
-                          NULL,
-                          0,
-                          FILE_SHARE_READ,
-                          FILE_OPEN,
-                          FILE_NON_DIRECTORY_FILE
-                          | FILE_SYNCHRONOUS_IO_NONALERT );
-
-    if (!NT_SUCCESS(error))
-    {
-          return false;
-    }
-    env->h_device_handle = hDevice;
-#else
     snprintf( psz_win32_drive, sizeof(psz_win32_drive),
                                       "\\\\.\\%c:",
                                       env->gen.source_name[len-2] );
@@ -983,7 +925,6 @@ init_win32ioctl (_img_private_t *env)
           if (env->h_device_handle == NULL)
                 return false;
     }
-#endif
     env->b_ioctl_init = true;
     set_scsi_tuple_win32ioctl(env);
     return true;

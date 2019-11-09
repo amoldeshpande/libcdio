@@ -42,3 +42,7 @@
 /stamp-h1
 /test-driver
 /tmp
+MSVC/.vs/
+MSVC/Intermediate/
+MSVC/Backup1/
+MSVC/Output/

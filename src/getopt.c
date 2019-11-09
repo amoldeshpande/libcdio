@@ -33,6 +33,11 @@
 # include <stdlib.h>
 #endif
 
+#if _MSC_VER
+#include<unistd.h>
+#endif
+
+
 #include <stdio.h>
 
 extern int getopt (int argc, char *const *argv, const char *optstring);
