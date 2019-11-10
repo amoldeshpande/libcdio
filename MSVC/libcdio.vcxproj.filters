@@ -8,9 +8,6 @@
     <Filter Include="Source Files\MSWindows">
       <UniqueIdentifier>{b79f2485-34b4-4464-a865-b630b91e9ef6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\image">
-      <UniqueIdentifier>{96319c9b-07d9-4334-b3f9-4b0b3ebb8799}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include Files">
       <UniqueIdentifier>{77bd1fcb-c99e-4aea-b4bd-82d25ac9bc26}</UniqueIdentifier>
     </Filter>
@@ -22,6 +19,9 @@
     </Filter>
     <Filter Include="Source Files\driver\FreeBSD">
       <UniqueIdentifier>{78a73910-59e5-447b-b940-8b2f2c029538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\driver\image">
+      <UniqueIdentifier>{96319c9b-07d9-4334-b3f9-4b0b3ebb8799}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +181,7 @@
       <Filter>Source Files\MSWindows</Filter>
     </ClInclude>
     <ClInclude Include="lib\image\nrg.h">
-      <Filter>Source Files\image</Filter>
+      <Filter>Source Files\driver\image</Filter>
     </ClInclude>
     <ClInclude Include="include\cdio\cd_types.h">
       <Filter>Include Files</Filter>
