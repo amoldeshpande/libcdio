@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+
+    <vcpkgplat Condition="'$(Platform)' == 'Win32'">x86</vcpkgplat>
+    <vcpkgplat Condition="'$(Platform)' == 'x64'">x64</vcpkgplat>
+    <vcpkglib Condition="'$(Configuration)' == 'Debug'">debug</vcpkglib>
+    <vcpkglib Condition="'$(Configuration)' == 'Release'">.</vcpkglib>
+
+    <libcddbdir>$(SolutionDir)..\..\libcddb</libcddbdir>
+    <!-- iconvDir>$(SolutionDir)\..\..\iconv-for-windows</iconvDir -->
+	<vcpkgdir>$(SolutionDir)..\..\vcpkg\installed\$(vcpkgplat)-windows-static</vcpkgdir>
+    <OutDir>$(SolutionDir)Output\$(Configuration)\$(Platform)\</OutDir>
+    <Intdir>$(SolutionDir)Intermediate\$(Configuration)\$(Platform)\$(ProjectName)\</Intdir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\include;$(libcddbdir)\include;$(vcpkgdir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(Projectdir)\Output\$(Configuration)\$(Platform);$(libcddbdir)\MSVC\Output\$(Configuration)\$(Platform);$(vcpkgdir)\$(vcpkglib)\lib;</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
