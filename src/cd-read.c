@@ -496,7 +496,7 @@ main(int argc, char *argv[])
   unsigned int blocklen=CDIO_CD_FRAMESIZE_RAW;
   CdIo *p_cdio=NULL;
   int output_fd=-1;
-  FILE *output_stream;
+  FILE *output_stream = NULL;
 
   init();
 
@@ -603,7 +603,7 @@ main(int argc, char *argv[])
 
   }
 
-  if (opts.output_file) close(output_fd);
+  if (opts.output_file) fclose(output_stream);
 
   myexit(p_cdio, EXIT_SUCCESS);
   /* Not reached:*/
