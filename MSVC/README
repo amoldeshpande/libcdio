@@ -1,4 +1,4 @@
-Files in this directory are for compiling with Microsoft Visual C. 
+~~Files in this directory are for compiling with Microsoft Visual C. 
 They are courtesy of John Oseman (mog) and Pete Batard <pete@akeo.ie>.
 
 The extract, driver, iso9660 and udf projects require Visual Studio 2010
@@ -6,4 +6,6 @@ or later.
 
 To compile your own project, you will probably need to add the missing/
 directory to your include path, as it provides stdint.h, inttypes.h and
-unistd.h that provide some of the missing types required by libcdio.
+unistd.h that provide some of the missing types required by libcdio.~~
+
+Visual Studio 2019 or newer (May work with 2017/2015, but that's not supported)
