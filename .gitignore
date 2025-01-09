@@ -46,3 +46,4 @@ MSVC/.vs/
 MSVC/Intermediate/
 MSVC/Backup1/
 MSVC/Output/
+MSVC/*.user

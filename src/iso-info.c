@@ -22,8 +22,8 @@
 #include "util.h"
 #undef err_exit
 
-#define err_exit(fmt, args...)                      \
-  report (stderr, "%s: "fmt, program_name, ##args); \
+#define err_exit(fmt, ...)                      \
+  report (stderr, "%s: "fmt, program_name, __VA_ARGS__); \
   iso9660_close(p_iso);                             \
   if (NULL != program_name) free(program_name);     \
   if (NULL != source_name)  free(source_name);      \
